@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ProEventosMEU.API.Models;
+using ProEventosMEU.API.Data;
 
 namespace ProEventosMEU.API.Controllers
 {
@@ -14,40 +15,24 @@ namespace ProEventosMEU.API.Controllers
     public class EventoController : ControllerBase
     {            
 
-        public IEnumerable<Evento> _evento = new Evento[] {
-            new Evento(){
-                EventoID = 1,
-                Tema = "teste",
-                Local = "MS - CG",
-                Lote = "1º Lote",
-                QtdPessoas = 250,
-                DataEvento = DateTime.Now.AddDays(2).ToString("dd/mm/yyyy")
-            }, 
-            new Evento(){
-                EventoID = 2,
-                Tema = "teste",
-                Local = "MS - CG",
-                Lote = "2º Lote",
-                QtdPessoas = 250,
-                DataEvento = DateTime.Now.AddDays(2).ToString("dd/mm/yyyy")
-            }        
-        };
+       
 
-        public EventoController()
+        private readonly DataConstext _context;
+        public EventoController(DataConstext context)
         {
-            
+            _context = context;
         }
 
         [HttpGet]
         public IEnumerable<Evento> Get()
         {
-            return _evento;
+            return _context.Eventos;
         }
 
          [HttpGet("{id}")]
-        public IEnumerable<Evento> GetById(int id)
+        public Evento GetById(int id)
         {
-            return _evento.Where(evento => evento.EventoID == id);
+            return _context.Eventos.FirstOrDefault(evento => evento.EventoID == id);
         }
 
         [HttpPost]
